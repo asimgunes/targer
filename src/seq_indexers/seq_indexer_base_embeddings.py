@@ -26,7 +26,7 @@ class SeqIndexerBaseEmbeddings(SeqIndexerBase):
                 emb_vector = list(map(lambda t: float(t), filter(lambda n: n and not n.isspace(), values[1:])))
                 if verbose:
                     if k % 25000 == 0:
-                        print('Reading embeddings file %s, line = %d          ' % (emb_fn, k), end='\r')
+                        print('Reading embeddings file %s, line = %d          ' % (emb_fn, k))
                 embeddings_cache.append({'w':word, 'v':emb_vector})
             print("Vocabulary size: ", len(embeddings_cache))
         for dic in embeddings_cache:
