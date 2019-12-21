@@ -4,6 +4,8 @@ import torch
 from src.seq_indexers.seq_indexer_base import SeqIndexerBase
 
 
+embeddings_cache = []
+
 class SeqIndexerBaseEmbeddings(SeqIndexerBase):
     """
     SeqIndexerBaseEmbeddings is a basic abstract sequence indexers class that implements work qith embeddings.
@@ -11,18 +13,24 @@ class SeqIndexerBaseEmbeddings(SeqIndexerBase):
     def __init__(self, gpu, check_for_lowercase, zero_digits, pad, unk, load_embeddings, embeddings_dim, verbose):
         SeqIndexerBase.__init__(self, gpu, check_for_lowercase, zero_digits, pad, unk, load_embeddings, embeddings_dim,
                                 verbose)
+
     @staticmethod
     def load_embeddings_from_file(emb_fn, emb_delimiter, verbose=True):
-        for k, line in enumerate(open(emb_fn, 'r')):
-            values = line.split(emb_delimiter)
-            if len(values) < 5:
-                continue
-            word = values[0]
-            emb_vector = list(map(lambda t: float(t), filter(lambda n: n and not n.isspace(), values[1:])))
-            if verbose:
-                if k % 25000 == 0:
-                    print('Reading embeddings file %s, line = %d' % (emb_fn, k))
-            yield word, emb_vector
+        global embeddings_cache
+        if(len(embeddings_cache) == 0):
+            for k, line in enumerate(open(emb_fn, 'r')):
+                values = line.split(emb_delimiter)
+                if len(values) < 5:
+                    continue
+                word = values[0]
+                emb_vector = list(map(lambda t: float(t), filter(lambda n: n and not n.isspace(), values[1:])))
+                if verbose:
+                    if k % 25000 == 0:
+                        print('Reading embeddings file %s, line = %d          ' % (emb_fn, k), end='\r')
+                embeddings_cache.append({'w':word, 'v':emb_vector})
+            print("Vocabulary size: ", len(embeddings_cache))
+        for dic in embeddings_cache:
+            yield dic['w'], dic['v']
 
     def generate_zero_emb_vector(self):
         if self.embeddings_dim == 0:
@@ -40,3 +48,5 @@ class SeqIndexerBaseEmbeddings(SeqIndexerBase):
 
     def get_loaded_embeddings_tensor(self):
         return torch.FloatTensor(np.asarray(self.embedding_vectors_list))
+        
+
