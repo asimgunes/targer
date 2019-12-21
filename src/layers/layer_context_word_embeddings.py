@@ -1,6 +1,7 @@
 
 """class implements word embeddings"""
-import torch.nn as nn
+import torch.nn as nn,
+import torch
 from src.layers.layer_base import LayerBase
 from allennlp.modules.elmo import Elmo, batch_to_ids
 
@@ -13,7 +14,9 @@ class LayerContextWordEmbeddings(LayerBase):
         print("Loading ELMo weights...")
         options_file = "embeddings/newscor.lower.elmo.options.json"
         weight_file = "embeddings/newscor.lower.elmo.weights.hdf5"
-        self.elmo = Elmo(options_file, weight_file, 2, dropout=0, gpu=gpu)
+        device = torch.device("cuda:"+gpu if (torch.cuda.is_available() and gpu > -1) else "cpu")        
+        self.elmo = Elmo(options_file, weight_file, 2, dropout=0)
+        elmo = elmo.to(device) # Using cuda
         print("ELMo weights loaded")
 
 
