@@ -1,6 +1,6 @@
 
 """class implements word embeddings"""
-import torch.nn as nn,
+import torch.nn as nn
 import torch
 from src.layers.layer_base import LayerBase
 from allennlp.modules.elmo import Elmo, batch_to_ids
