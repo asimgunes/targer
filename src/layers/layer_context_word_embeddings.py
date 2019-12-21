@@ -13,7 +13,7 @@ class LayerContextWordEmbeddings(LayerBase):
         print("Loading ELMo weights...")
         options_file = "embeddings/newscor.lower.elmo.options.json"
         weight_file = "embeddings/newscor.lower.elmo.weights.hdf5"
-        self.elmo = Elmo(options_file, weight_file, 2, dropout=0)
+        self.elmo = Elmo(options_file, weight_file, 2, dropout=0, gpu=gpu)
         print("ELMo weights loaded")
 
 
