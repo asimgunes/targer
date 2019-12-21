@@ -49,6 +49,7 @@ if __name__ == "__main__":
     parser.add_argument('--clip-grad', type=float, default=5, help='Clipping gradients maximum L2 norm.')
     parser.add_argument('--rnn-type', help='RNN cell units type.', choices=['Vanilla', 'LSTM', 'GRU'], default='LSTM')
     parser.add_argument('--rnn-hidden-dim', type=int, default=100, help='Number hidden units in the recurrent layer.')
+    parser.add_argument('--emb-type', default='word', help='Embeddings type [word, elmo]')
     parser.add_argument('--emb-fn', default='embeddings/glove.6B.100d.txt', help='Path to word embeddings file.')
     parser.add_argument('--emb-dim', type=int, default=100, help='Dimension of word embeddings file.')
     parser.add_argument('--emb-delimiter', default=' ', help='Delimiter for word embeddings file.')

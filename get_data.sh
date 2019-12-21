@@ -1,12 +1,14 @@
 wget http://storage.asmfx.net/nlp/newscor.embeddings.zip
-mv newscor.embeddings.zip /embeddings/newscor.embeddings.zip
-unzip /embeddings/newscor.embeddings.zip
+wget http://storage.asmfx.net/nlp/ner-tr.zip
+
+unzip newscor.embeddings.zip
+mv newscor.* embeddings/
 mkdir data/NER/tr-source
 mkdir data/NER/tr-full
 mkdir data/NER/tr-min
-wget http://storage.asmfx.net/nlp/ner-tr.zip
-cp ner-tr.zip data/NER/tr-source/ner-tr.zip
-unzip data/NER/tr-source/ner-tr.zip
+unzip ner-tr.zip
+mv train.txt data/NER/tr-source/train.txt
+mv test.txt data/NER/tr-source/test.txt
 
 python create-dataset.py data/NER/tr-source/train.txt data/NER/tr-full/train.txt 0 100000
 python create-dataset.py data/NER/tr-source/test.txt data/NER/tr-full/dev.txt 0 500

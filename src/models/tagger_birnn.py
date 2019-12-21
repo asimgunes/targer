@@ -2,7 +2,7 @@
 import torch
 import torch.nn as nn
 from src.models.tagger_base import TaggerBase
-from src.layers.layer_word_embeddings import LayerWordEmbeddings
+from src.factories.factory_embeddings import EmbeddingsFactory
 from src.layers.layer_bivanilla import LayerBiVanilla
 from src.layers.layer_bilstm import LayerBiLSTM
 from src.layers.layer_bigru import LayerBiGRU
@@ -11,7 +11,7 @@ from src.layers.layer_bigru import LayerBiGRU
 class TaggerBiRNN(TaggerBase):
     """TaggerBiRNN is a Vanilla recurrent network model for sequences tagging."""
     def __init__(self, word_seq_indexer, tag_seq_indexer, class_num, batch_size=1, rnn_hidden_dim=100,
-                 freeze_word_embeddings=False, dropout_ratio=0.5, rnn_type='GRU', gpu=-1):
+                 freeze_word_embeddings=False, dropout_ratio=0.5, rnn_type='GRU', gpu=-1, emb_type='word'):
         super(TaggerBiRNN, self).__init__(word_seq_indexer, tag_seq_indexer, gpu, batch_size)
         self.tag_seq_indexer = tag_seq_indexer
         self.class_num = class_num
@@ -20,7 +20,7 @@ class TaggerBiRNN(TaggerBase):
         self.dropout_ratio = dropout_ratio
         self.rnn_type = rnn_type
         self.gpu = gpu
-        self.word_embeddings_layer = LayerWordEmbeddings(word_seq_indexer, gpu, freeze_word_embeddings)
+        self.word_embeddings_layer = EmbeddingsFactory.create(emb_type, word_seq_indexer, gpu, freeze_word_embeddings)
         self.dropout = torch.nn.Dropout(p=dropout_ratio)
         if rnn_type == 'GRU':
             self.birnn_layer = LayerBiGRU(input_dim=self.word_embeddings_layer.output_dim,
